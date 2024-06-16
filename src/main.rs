@@ -1,3 +1,5 @@
+use std::time::{Duration, Instant};
+
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
@@ -7,8 +9,9 @@ const PLAYER_SPEED: f32 = 500.;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .init_state::<ShootStatus>()
         .add_systems(Startup, (spawn_player, spawn_camera))
-        .add_systems(Update, player_movement)
+        .add_systems(Update, (player_movement, shoot))
         .run();
 }
 
@@ -70,5 +73,35 @@ fn player_movement(
         }
 
         transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
+    }
+}
+
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+enum ShootStatus {
+    #[default]
+    Ready,
+    Fired(Instant),
+}
+
+const SHOOT_COOLDOWN: u64 = 2000;
+
+fn shoot(
+    shoot_state: Res<State<ShootStatus>>,
+    mut shoot_state_next_state: ResMut<NextState<ShootStatus>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut _player_query: Query<&mut Transform, With<Player>>,
+) {
+    match **shoot_state {
+        ShootStatus::Ready => {
+            if keyboard_input.just_pressed(KeyCode::Space) {
+                dbg!("pew pew!");
+                shoot_state_next_state.set(ShootStatus::Fired(Instant::now()))
+            }
+        }
+        ShootStatus::Fired(time_fired) => {
+            if Instant::now().duration_since(time_fired) > Duration::from_millis(SHOOT_COOLDOWN) {
+                shoot_state_next_state.set(ShootStatus::Ready)
+            }
+        }
     }
 }
