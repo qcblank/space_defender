@@ -25,6 +25,7 @@ fn main() {
                 enemy_hit,
             ),
         )
+        .add_systems(Last, number_of_enemies_check)
         .run();
 }
 
@@ -239,5 +240,13 @@ fn enemy_hit(
         if bullet_destroyed {
             break;
         }
+    }
+}
+
+const MAX_ENEMIES: usize = 7;
+
+fn number_of_enemies_check(enemy_query: Query<(Entity, &Transform), With<Enemy>>) {
+    if enemy_query.iter().len() > MAX_ENEMIES {
+        dbg!("You lose!");
     }
 }
