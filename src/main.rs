@@ -42,7 +42,9 @@ fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Primar
 }
 
 #[derive(Component)]
-struct Player {}
+struct Player {
+    score: u32,
+}
 
 fn spawn_player(
     mut commands: Commands,
@@ -65,7 +67,7 @@ fn spawn_player(
             transform: Transform::from_xyz(window.width() / 2., 50., 0.1),
             ..default()
         },
-        Player {},
+        Player { score: 0 },
     ));
 }
 
@@ -228,7 +230,10 @@ fn enemy_hit(
     mut commands: Commands,
     bullet_query: Query<(Entity, &Transform), With<Bullet>>,
     enemy_query: Query<(Entity, &Transform), With<Enemy>>,
+    mut player_query: Query<&mut Player, With<Player>>,
 ) {
+    let mut player = player_query.get_single_mut().unwrap();
+
     for (bullet_entity, bullet_transform) in bullet_query.iter() {
         let mut bullet_destroyed = false;
         for (enemy_entity, enemy_transform) in enemy_query.iter() {
@@ -239,9 +244,11 @@ fn enemy_hit(
             {
                 commands.entity(bullet_entity).despawn_recursive();
                 commands.entity(enemy_entity).despawn_recursive();
+                bullet_destroyed = true;
+                player.score += 1;
+                dbg!(player.score);
+                break;
             }
-            bullet_destroyed = true;
-            break;
         }
         if bullet_destroyed {
             break;
@@ -292,13 +299,16 @@ fn lose_screen(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     window_query: Query<&Window, With<PrimaryWindow>>,
+    player_query: Query<&Player, With<Player>>,
 ) {
     let window = window_query.get_single().unwrap();
+    let player = player_query.get_single().unwrap();
+
     commands.spawn((
         // Create a TextBundle that has a Text with a single section.
         TextBundle::from_section(
             // Accepts a `String` or any type that converts into a `String`, such as `&str`
-            "You Lose!",
+            format!("You Lose!\nScore: {}", player.score),
             TextStyle {
                 // This font is loaded and will be used instead of the default font.
                 font: asset_server.load("fonts/FiraSans-Bold.ttf"),
