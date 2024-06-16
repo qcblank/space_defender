@@ -92,7 +92,7 @@ struct Bullet {
 
 const BULLET_SPEED: f32 = 650.;
 
-const SHOOT_COOLDOWN: u64 = 2000;
+const SHOOT_COOLDOWN: u64 = 400;
 
 fn shoot(
     mut commands: Commands,
