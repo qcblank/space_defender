@@ -2,10 +2,13 @@ use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 
+const PLAYER_SPEED: f32 = 500.;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, (spawn_player, spawn_camera))
+        .add_systems(Update, player_movement)
         .run();
 }
 
@@ -44,4 +47,28 @@ fn spawn_player(
         },
         Player {},
     ));
+}
+
+fn player_movement(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut player_query: Query<&mut Transform, With<Player>>,
+    time: Res<Time>,
+) {
+    if let Ok(mut transform) = player_query.get_single_mut() {
+        let mut direction = Vec3::ZERO;
+
+        if keyboard_input.pressed(KeyCode::ArrowLeft) || keyboard_input.pressed(KeyCode::KeyA) {
+            direction += Vec3::new(-1.0, 0.0, 0.0);
+        }
+
+        if keyboard_input.pressed(KeyCode::ArrowRight) || keyboard_input.pressed(KeyCode::KeyD) {
+            direction += Vec3::new(1.0, 0.0, 0.0);
+        }
+
+        if direction.length() > 0.0 {
+            direction = direction.normalize();
+        }
+
+        transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
+    }
 }
