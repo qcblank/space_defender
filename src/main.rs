@@ -14,6 +14,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .init_state::<ShootStatus>()
         .init_state::<SpawnEnemyStatus>()
+        .init_state::<AppState>()
         .add_systems(Startup, (spawn_player, spawn_camera))
         .add_systems(
             Update,
@@ -23,6 +24,7 @@ fn main() {
                 bullet_movement,
                 spawn_enemies,
                 enemy_hit,
+                transition_to_game_state,
             ),
         )
         .add_systems(Last, number_of_enemies_check)
@@ -178,6 +180,7 @@ const ENEMY_SIZE: f32 = 64.0; // This is the enemy sprite size.
 
 fn spawn_enemies(
     mut commands: Commands,
+    app_state: Res<State<AppState>>,
     spawn_enemy_state: Res<State<SpawnEnemyStatus>>,
     mut spawn_enemy_state_next_state: ResMut<NextState<SpawnEnemyStatus>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
@@ -186,33 +189,35 @@ fn spawn_enemies(
 ) {
     let window = window_query.get_single().unwrap();
 
-    match **spawn_enemy_state {
-        SpawnEnemyStatus::Ready => {
-            dbg!("boo!");
+    if **app_state == AppState::Game {
+        match **spawn_enemy_state {
+            SpawnEnemyStatus::Ready => {
+                dbg!("boo!");
 
-            let random_x = ENEMY_SIZE / 2.0 + random::<f32>() * (window.width() - ENEMY_SIZE);
+                let random_x = ENEMY_SIZE / 2.0 + random::<f32>() * (window.width() - ENEMY_SIZE);
 
-            commands.spawn((
-                MaterialMesh2dBundle {
-                    mesh: meshes.add(Circle::new(ENEMY_SIZE / 2.)).into(),
-                    material: materials.add(ColorMaterial::from(Color::CRIMSON)),
-                    transform: Transform::from_translation(Vec3::new(
-                        random_x,
-                        window.height() * 0.75,
-                        0.,
-                    )),
-                    ..default()
-                },
-                Enemy {},
-            ));
+                commands.spawn((
+                    MaterialMesh2dBundle {
+                        mesh: meshes.add(Circle::new(ENEMY_SIZE / 2.)).into(),
+                        material: materials.add(ColorMaterial::from(Color::CRIMSON)),
+                        transform: Transform::from_translation(Vec3::new(
+                            random_x,
+                            window.height() * 0.75,
+                            0.,
+                        )),
+                        ..default()
+                    },
+                    Enemy {},
+                ));
 
-            spawn_enemy_state_next_state.set(SpawnEnemyStatus::Cooldown(Instant::now()))
-        }
-        SpawnEnemyStatus::Cooldown(last_spawned) => {
-            if Instant::now().duration_since(last_spawned)
-                > Duration::from_millis(ENEMY_SPAWN_COOLDOWN)
-            {
-                spawn_enemy_state_next_state.set(SpawnEnemyStatus::Ready)
+                spawn_enemy_state_next_state.set(SpawnEnemyStatus::Cooldown(Instant::now()))
+            }
+            SpawnEnemyStatus::Cooldown(last_spawned) => {
+                if Instant::now().duration_since(last_spawned)
+                    > Duration::from_millis(ENEMY_SPAWN_COOLDOWN)
+                {
+                    spawn_enemy_state_next_state.set(SpawnEnemyStatus::Ready)
+                }
             }
         }
     }
@@ -245,8 +250,36 @@ fn enemy_hit(
 
 const MAX_ENEMIES: usize = 7;
 
-fn number_of_enemies_check(enemy_query: Query<(Entity, &Transform), With<Enemy>>) {
-    if enemy_query.iter().len() > MAX_ENEMIES {
-        dbg!("You lose!");
+fn number_of_enemies_check(
+    enemy_query: Query<(Entity, &Transform), With<Enemy>>,
+    app_state: Res<State<AppState>>,
+    mut app_state_next_state: ResMut<NextState<AppState>>,
+) {
+    if **app_state == AppState::Game {
+        if enemy_query.iter().len() > MAX_ENEMIES {
+            dbg!("You lose!");
+            app_state_next_state.set(AppState::Lost)
+        }
+    }
+}
+
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+pub enum AppState {
+    #[default]
+    MainMenu,
+    Game,
+    Lost,
+}
+
+pub fn transition_to_game_state(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    app_state: Res<State<AppState>>,
+    mut app_state_next_state: ResMut<NextState<AppState>>,
+) {
+    if keyboard_input.just_pressed(KeyCode::Enter) {
+        if **app_state != AppState::Game {
+            app_state_next_state.set(AppState::Game);
+            println!("Entered AppState::Game");
+        }
     }
 }
