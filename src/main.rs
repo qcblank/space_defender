@@ -28,6 +28,7 @@ fn main() {
             ),
         )
         .add_systems(Last, number_of_enemies_check)
+        .add_systems(OnEnter(AppState::Lost), lose_screen)
         .run();
 }
 
@@ -282,4 +283,37 @@ fn transition_to_game_state(
             println!("Entered AppState::Game");
         }
     }
+}
+
+#[derive(Component)]
+struct LoseText;
+
+fn lose_screen(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+) {
+    let window = window_query.get_single().unwrap();
+    commands.spawn((
+        // Create a TextBundle that has a Text with a single section.
+        TextBundle::from_section(
+            // Accepts a `String` or any type that converts into a `String`, such as `&str`
+            "You Lose!",
+            TextStyle {
+                // This font is loaded and will be used instead of the default font.
+                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                font_size: 100.0,
+                ..default()
+            },
+        ) // Set the justification of the Text
+        .with_text_justify(JustifyText::Center)
+        // Set the style of the TextBundle itself.
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            bottom: Val::Px(window.height() / 2.0),
+            right: Val::Px(window.width() / 2.0),
+            ..default()
+        }),
+        LoseText,
+    ));
 }
