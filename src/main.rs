@@ -264,14 +264,14 @@ fn number_of_enemies_check(
 }
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
-pub enum AppState {
+enum AppState {
     #[default]
     MainMenu,
     Game,
     Lost,
 }
 
-pub fn transition_to_game_state(
+fn transition_to_game_state(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     app_state: Res<State<AppState>>,
     mut app_state_next_state: ResMut<NextState<AppState>>,
