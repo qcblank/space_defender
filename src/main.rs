@@ -3,6 +3,7 @@ use std::time::{Duration, Instant};
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
+use rand::prelude::*;
 
 const PLAYER_SPEED: f32 = 500.;
 const PLAYER_WIDTH: f32 = 40.;
@@ -12,8 +13,12 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .init_state::<ShootStatus>()
+        .init_state::<SpawnEnemyStatus>()
         .add_systems(Startup, (spawn_player, spawn_camera))
-        .add_systems(Update, (player_movement, shoot, bullet_movement))
+        .add_systems(
+            Update,
+            (player_movement, shoot, bullet_movement, spawn_enemies),
+        )
         .run();
 }
 
@@ -92,7 +97,7 @@ struct Bullet {
 
 const BULLET_SPEED: f32 = 650.;
 
-const SHOOT_COOLDOWN: u64 = 400;
+const SHOOT_COOLDOWN: u64 = 500;
 
 fn shoot(
     mut commands: Commands,
@@ -147,6 +152,61 @@ fn bullet_movement(
         transform.translation += Vec3::Y * bullet.speed * time.delta_seconds();
         if transform.translation.y > window.height() {
             commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
+#[derive(Component)]
+struct Enemy {}
+
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+enum SpawnEnemyStatus {
+    #[default]
+    Ready,
+    Cooldown(Instant),
+}
+
+const ENEMY_SPAWN_COOLDOWN: u64 = 2000;
+const ENEMY_SIZE: f32 = 64.0; // This is the enemy sprite size.
+
+fn spawn_enemies(
+    mut commands: Commands,
+    spawn_enemy_state: Res<State<SpawnEnemyStatus>>,
+    mut spawn_enemy_state_next_state: ResMut<NextState<SpawnEnemyStatus>>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+) {
+    let window = window_query.get_single().unwrap();
+
+    match **spawn_enemy_state {
+        SpawnEnemyStatus::Ready => {
+            dbg!("boo!");
+
+            let random_x = ENEMY_SIZE / 2.0 + random::<f32>() * (window.width() - ENEMY_SIZE);
+
+            commands.spawn((
+                MaterialMesh2dBundle {
+                    mesh: meshes.add(Circle::new(ENEMY_SIZE / 2.)).into(),
+                    material: materials.add(ColorMaterial::from(Color::CRIMSON)),
+                    transform: Transform::from_translation(Vec3::new(
+                        random_x,
+                        window.height() * 0.75,
+                        0.,
+                    )),
+                    ..default()
+                },
+                Enemy {},
+            ));
+
+            spawn_enemy_state_next_state.set(SpawnEnemyStatus::Cooldown(Instant::now()))
+        }
+        SpawnEnemyStatus::Cooldown(last_spawned) => {
+            if Instant::now().duration_since(last_spawned)
+                > Duration::from_millis(ENEMY_SPAWN_COOLDOWN)
+            {
+                spawn_enemy_state_next_state.set(SpawnEnemyStatus::Ready)
+            }
         }
     }
 }
