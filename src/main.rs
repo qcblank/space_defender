@@ -105,7 +105,7 @@ fn shoot(
 ) {
     match **shoot_state {
         ShootStatus::Ready => {
-            if keyboard_input.just_pressed(KeyCode::Space) {
+            if keyboard_input.pressed(KeyCode::Space) {
                 dbg!("pew pew!");
 
                 let player_transform = player_query.get_single().unwrap();
