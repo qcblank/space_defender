@@ -2,24 +2,11 @@ use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 
+use super::Player;
+
 pub const PLAYER_SPEED: f32 = 500.;
 pub const PLAYER_WIDTH: f32 = 40.;
 pub const PLAYER_HEIGHT: f32 = 60.;
-
-#[derive(Component)]
-pub struct Player {
-    score: u32,
-}
-
-impl Player {
-    pub fn get_score(&self) -> u32 {
-        self.score
-    }
-
-    pub fn increment_score(&mut self) {
-        self.score += 1;
-    }
-}
 
 pub fn spawn_player(
     mut commands: Commands,
@@ -42,6 +29,6 @@ pub fn spawn_player(
             transform: Transform::from_xyz(window.width() / 2., 50., 0.1),
             ..default()
         },
-        Player { score: 0 },
+        Player::default(),
     ));
 }

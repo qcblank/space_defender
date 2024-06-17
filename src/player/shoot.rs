@@ -1,6 +1,6 @@
 use std::time::{Duration, Instant};
 
-use super::{Player, PLAYER_HEIGHT, PLAYER_WIDTH};
+use super::{Bullet, Player, PLAYER_HEIGHT, PLAYER_WIDTH};
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
@@ -13,11 +13,6 @@ pub enum ShootStatus {
     #[default]
     Ready,
     Fired(Instant),
-}
-
-#[derive(Component)]
-pub struct Bullet {
-    speed: f32,
 }
 
 pub fn shoot(
@@ -47,9 +42,7 @@ pub fn shoot(
                         )),
                         ..default()
                     },
-                    Bullet {
-                        speed: BULLET_SPEED,
-                    },
+                    Bullet::with_speed(BULLET_SPEED),
                 ));
                 shoot_state_next_state.set(ShootStatus::Fired(Instant::now()))
             }
@@ -70,7 +63,7 @@ pub fn bullet_movement(
 ) {
     let window = window_query.get_single().unwrap();
     for (entity, mut transform, bullet) in bullet_query.iter_mut() {
-        transform.translation += Vec3::Y * bullet.speed * time.delta_seconds();
+        transform.translation += Vec3::Y * bullet.get_speed() * time.delta_seconds();
         if transform.translation.y > window.height() {
             commands.entity(entity).despawn_recursive();
         }

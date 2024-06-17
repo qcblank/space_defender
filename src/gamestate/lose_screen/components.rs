@@ -1,4 +1,4 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-struct LoseText;
+pub struct LoseText;

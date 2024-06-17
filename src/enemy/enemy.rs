@@ -5,14 +5,12 @@ use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 use rand::prelude::*;
 
+use super::Enemy;
 use crate::gamestate::AppState;
 
 pub const ENEMY_SIZE: f32 = 64.0; // This is the enemy sprite size.
 
 const ENEMY_SPAWN_COOLDOWN: u64 = 2000;
-
-#[derive(Component)]
-pub struct Enemy {}
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum SpawnEnemyStatus {

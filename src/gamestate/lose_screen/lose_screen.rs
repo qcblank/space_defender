@@ -1,13 +1,12 @@
+use super::LoseText;
 use crate::enemy::Enemy;
 use crate::player::{Bullet, Player};
 use crate::AppState;
+
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
 const MAX_ENEMIES: usize = 7;
-
-#[derive(Component)]
-struct LoseText;
 
 pub fn number_of_enemies_check(
     enemy_query: Query<(Entity, &Transform), With<Enemy>>,

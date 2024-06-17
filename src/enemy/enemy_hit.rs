@@ -1,6 +1,6 @@
-use crate::enemy::enemy::{Enemy, ENEMY_SIZE};
-use crate::player::shoot::Bullet;
-use crate::player::Player;
+use super::{Enemy, ENEMY_SIZE};
+use crate::player::{Bullet, Player};
+
 use bevy::prelude::*;
 
 pub fn enemy_hit(
