@@ -1,3 +1,4 @@
+mod components;
 pub mod enemy;
 pub mod enemy_hit;
 

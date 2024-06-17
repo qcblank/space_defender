@@ -1,7 +1,7 @@
 use bevy::app::AppExit;
 use bevy::prelude::*;
 
-use super::main_menu::{PlayButton, QuitButton};
+use super::components::{PlayButton, QuitButton};
 use super::styles::{HOVERED_BUTTON_COLOUR, NORMAL_BUTTON_COLOUR, PRESSED_BUTTON_COLOUR};
 
 use crate::AppState;

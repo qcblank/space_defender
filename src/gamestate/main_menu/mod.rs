@@ -1,3 +1,4 @@
+pub mod components;
 mod interactions;
 pub mod main_menu;
 mod styles;

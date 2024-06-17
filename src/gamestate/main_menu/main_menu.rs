@@ -1,19 +1,10 @@
+use super::components::{MainMenu, PlayButton, QuitButton};
 use bevy::prelude::*;
 
 use super::styles::{
     get_button_text_style, get_title_text_style, BUTTON_STYLE, MAIN_MENU_STYLE,
     NORMAL_BUTTON_COLOUR, TITLE_STYLE,
 };
-
-#[derive(Component)]
-pub struct MainMenu {}
-
-#[derive(Component)]
-pub struct PlayButton {}
-
-#[derive(Component)]
-pub struct QuitButton {}
-
 pub fn spawn_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     build_main_menu(&mut commands, &asset_server);
 }
