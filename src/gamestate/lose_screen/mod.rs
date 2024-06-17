@@ -1,5 +1,8 @@
 mod components;
+mod interactions;
 mod lose_screen;
 
-use components::LoseText;
-pub use lose_screen::{clear_screen, lose_screen, number_of_enemies_check};
+pub use interactions::interact_with_shop_button;
+pub use lose_screen::{
+    clear_screen, despawn_lose_screen, number_of_enemies_check, spawn_lose_screen,
+};

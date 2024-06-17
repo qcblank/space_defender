@@ -1,4 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct LoseText;
+pub struct ShopButton {}
+
+#[derive(Component)]
+pub struct LoseScreen;

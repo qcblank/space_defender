@@ -1,10 +1,10 @@
-use super::LoseText;
+use super::components::{LoseScreen, ShopButton};
 use crate::enemy::Enemy;
+use crate::gamestate::main_menu::styles::*;
 use crate::player::{Bullet, Player};
 use crate::AppState;
 
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
 
 const MAX_ENEMIES: usize = 7;
 
@@ -38,35 +38,82 @@ pub fn clear_screen(
     }
 }
 
-pub fn lose_screen(
+pub fn spawn_lose_screen(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    window_query: Query<&Window, With<PrimaryWindow>>,
     player_query: Query<&Player, With<Player>>,
 ) {
-    let window = window_query.get_single().unwrap();
     let player = player_query.get_single().unwrap();
+    build_lose_screen(&mut commands, &asset_server, player.get_score());
+}
 
-    commands.spawn((
-        // Create a TextBundle that has a Text with a single section.
-        TextBundle::from_section(
-            // Accepts a `String` or any type that converts into a `String`, such as `&str`
-            format!("You Lose!\nScore: {}", player.get_score()),
-            TextStyle {
-                // This font is loaded and will be used instead of the default font.
-                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                font_size: 100.0,
+pub fn despawn_lose_screen(
+    mut commands: Commands,
+    main_menu_query: Query<Entity, With<LoseScreen>>,
+) {
+    if let Ok(main_menu_entity) = main_menu_query.get_single() {
+        commands.entity(main_menu_entity).despawn_recursive();
+    }
+}
+
+pub fn build_lose_screen(
+    commands: &mut Commands,
+    asset_server: &Res<AssetServer>,
+    score: u32,
+) -> Entity {
+    let main_menu_entity = commands
+        .spawn((
+            NodeBundle {
+                style: MAIN_MENU_STYLE,
                 ..default()
             },
-        ) // Set the justification of the Text
-        .with_text_justify(JustifyText::Center)
-        // Set the style of the TextBundle itself.
-        .with_style(Style {
-            position_type: PositionType::Absolute,
-            bottom: Val::Px(window.height() / 2.0),
-            right: Val::Px(window.width() / 2.0),
-            ..default()
-        }),
-        LoseText,
-    ));
+            LoseScreen {},
+        ))
+        .with_children(|parent| {
+            // ------ Title ------
+            parent
+                .spawn(NodeBundle {
+                    style: TITLE_STYLE,
+                    ..default()
+                })
+                .with_children(|parent| {
+                    // Text
+                    parent.spawn(TextBundle {
+                        text: Text {
+                            sections: vec![TextSection::new(
+                                format!("You Lose!\nScore: {}", score),
+                                get_title_text_style(&asset_server),
+                            )],
+                            ..default()
+                        },
+                        ..default()
+                    });
+                });
+
+            // ------ Shop Button ------
+            parent
+                .spawn((
+                    ButtonBundle {
+                        style: BUTTON_STYLE,
+                        background_color: NORMAL_BUTTON_COLOUR.into(),
+                        ..default()
+                    },
+                    ShopButton {},
+                ))
+                .with_children(|parent| {
+                    parent.spawn(TextBundle {
+                        text: Text {
+                            sections: vec![TextSection::new(
+                                "Shop",
+                                get_button_text_style(&asset_server),
+                            )],
+                            ..default()
+                        },
+                        ..default()
+                    });
+                });
+        })
+        .id();
+
+    main_menu_entity
 }
