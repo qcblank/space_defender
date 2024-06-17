@@ -1,5 +1,5 @@
 use crate::enemy::Enemy;
-use crate::player::Player;
+use crate::player::{Bullet, Player};
 use crate::AppState;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
@@ -19,6 +19,23 @@ pub fn number_of_enemies_check(
             dbg!("You lose!");
             app_state_next_state.set(AppState::Lost)
         }
+    }
+}
+
+pub fn clear_screen(
+    mut commands: Commands,
+    player_query: Query<Entity, With<Player>>,
+    bullet_query: Query<Entity, With<Bullet>>,
+    enemy_query: Query<Entity, With<Enemy>>,
+) {
+    commands
+        .entity(player_query.get_single().unwrap())
+        .despawn_recursive();
+    for bullet in bullet_query.iter() {
+        commands.entity(bullet).despawn_recursive();
+    }
+    for enemy in enemy_query.iter() {
+        commands.entity(enemy).despawn_recursive();
     }
 }
 
