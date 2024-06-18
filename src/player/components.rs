@@ -13,6 +13,10 @@ impl Player {
     pub fn increment_score(&mut self) {
         self.score += 1;
     }
+
+    pub fn decrement_score(&mut self, value: u32) {
+        self.score -= value;
+    }
 }
 
 #[derive(Component)]

@@ -6,7 +6,7 @@ use crate::AppState;
 
 use bevy::prelude::*;
 
-const MAX_ENEMIES: usize = 7;
+const MAX_ENEMIES: usize = 2;
 
 pub fn number_of_enemies_check(
     enemy_query: Query<(Entity, &Transform), With<Enemy>>,
@@ -23,13 +23,9 @@ pub fn number_of_enemies_check(
 
 pub fn clear_screen(
     mut commands: Commands,
-    player_query: Query<Entity, With<Player>>,
     bullet_query: Query<Entity, With<Bullet>>,
     enemy_query: Query<Entity, With<Enemy>>,
 ) {
-    commands
-        .entity(player_query.get_single().unwrap())
-        .despawn_recursive();
     for bullet in bullet_query.iter() {
         commands.entity(bullet).despawn_recursive();
     }

@@ -1,3 +1,4 @@
+use super::components::{BuyButton, ShopItem, Upgrade};
 use super::styles::SHOP_MENU_STYLE;
 use crate::gamestate::main_menu::styles::*;
 use crate::gamestate::main_menu::{PlayButton, QuitButton};
@@ -38,6 +39,29 @@ pub fn build_shop_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                             sections: vec![TextSection::new(
                                 "-- Shop --",
                                 get_title_text_style(&asset_server),
+                            )],
+                            ..default()
+                        },
+                        ..default()
+                    });
+                });
+
+            // ------ Buy firerate Button ------
+            parent
+                .spawn((
+                    ButtonBundle {
+                        style: BUTTON_STYLE,
+                        background_color: NORMAL_BUTTON_COLOUR.into(),
+                        ..default()
+                    },
+                    BuyButton::with(ShopItem::with(Upgrade::Firerate, 10)),
+                ))
+                .with_children(|parent| {
+                    parent.spawn(TextBundle {
+                        text: Text {
+                            sections: vec![TextSection::new(
+                                "firerate",
+                                get_button_text_style(&asset_server),
                             )],
                             ..default()
                         },
