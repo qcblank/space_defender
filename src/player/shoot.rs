@@ -6,7 +6,6 @@ use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 
 const BULLET_SPEED: f32 = 650.;
-const SHOOT_COOLDOWN: u64 = 500;
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum ShootStatus {
@@ -22,14 +21,13 @@ pub fn shoot(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    player_query: Query<&Transform, With<Player>>,
+    player_query: Query<(&Player, &Transform), With<Player>>,
 ) {
+    let (player, player_transform) = player_query.get_single().unwrap();
     match **shoot_state {
         ShootStatus::Ready => {
             if keyboard_input.pressed(KeyCode::Space) {
                 dbg!("pew pew!");
-
-                let player_transform = player_query.get_single().unwrap();
 
                 commands.spawn((
                     MaterialMesh2dBundle {
@@ -48,7 +46,9 @@ pub fn shoot(
             }
         }
         ShootStatus::Fired(time_fired) => {
-            if Instant::now().duration_since(time_fired) > Duration::from_millis(SHOOT_COOLDOWN) {
+            if Instant::now().duration_since(time_fired)
+                > Duration::from_millis(player.get_shot_cooldown())
+            {
                 shoot_state_next_state.set(ShootStatus::Ready)
             }
         }

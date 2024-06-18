@@ -21,7 +21,7 @@ fn main() {
         .init_state::<ShootStatus>()
         .init_state::<SpawnEnemyStatus>()
         .init_state::<AppState>()
-        .add_systems(Startup, spawn_camera)
+        .add_systems(Startup, (spawn_camera, spawn_player))
         .add_systems(
             Update,
             (
@@ -58,7 +58,6 @@ fn main() {
         .add_systems(Last, number_of_enemies_check)
         .add_systems(OnEnter(AppState::MainMenu), spawn_main_menu)
         .add_systems(OnExit(AppState::MainMenu), despawn_main_menu)
-        .add_systems(OnEnter(AppState::Game), spawn_player)
         .add_systems(OnEnter(AppState::Lost), (spawn_lose_screen, clear_screen))
         .add_systems(OnExit(AppState::Lost), despawn_lose_screen)
         .add_systems(OnEnter(AppState::Shop), spawn_shop_menu)

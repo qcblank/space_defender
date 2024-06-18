@@ -22,6 +22,7 @@ pub fn interact_with_buy_button(
                 if player.get_score() >= item_price {
                     dbg!(player.get_score() - item_price);
                     player.decrement_score(item_price);
+                    player.decrease_shot_cooldown(25);
                 };
             }
             Interaction::Hovered => {
