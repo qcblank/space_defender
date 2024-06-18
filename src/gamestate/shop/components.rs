@@ -4,6 +4,9 @@ use bevy::prelude::*;
 pub struct ShopMenu {}
 
 #[derive(Component)]
+pub struct PlayerScore {}
+
+#[derive(Component)]
 pub struct BuyButton {
     item: ShopItem,
 }
