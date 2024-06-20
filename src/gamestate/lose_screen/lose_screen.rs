@@ -1,5 +1,5 @@
 use super::components::{LoseScreen, ShopButton};
-use crate::enemy::Enemy;
+use crate::enemy::{Enemy, EnemySpawnCount};
 use crate::gamestate::main_menu::styles::*;
 use crate::player::{Bullet, Player};
 use crate::AppState;
@@ -12,10 +12,12 @@ pub fn number_of_enemies_check(
     enemy_query: Query<(Entity, &Transform), With<Enemy>>,
     app_state: Res<State<AppState>>,
     mut app_state_next_state: ResMut<NextState<AppState>>,
+    mut spawn_enemy_count: ResMut<EnemySpawnCount>,
 ) {
     if **app_state == AppState::Game {
         if enemy_query.iter().len() > MAX_ENEMIES {
             dbg!("You lose!");
+            spawn_enemy_count.reset();
             app_state_next_state.set(AppState::Lost)
         }
     }
