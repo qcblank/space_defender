@@ -5,12 +5,14 @@ use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 use rand::prelude::*;
 
-use super::Enemy;
+use super::{Enemy, EnemySpawnCount};
 use crate::gamestate::AppState;
 
 pub const ENEMY_SIZE: f32 = 64.0; // This is the enemy sprite size.
 
-const ENEMY_SPAWN_COOLDOWN: u64 = 2000;
+const ENEMY_SPAWN_COOLDOWN_BASE: u64 = 2000;
+const WAVE_LENGTH: u64 = 10;
+const PER_LEVEL_SPAWN_COOLDOWN_DECREASE: u64 = 200;
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum SpawnEnemyStatus {
@@ -24,6 +26,7 @@ pub fn spawn_enemies(
     app_state: Res<State<AppState>>,
     spawn_enemy_state: Res<State<SpawnEnemyStatus>>,
     mut spawn_enemy_state_next_state: ResMut<NextState<SpawnEnemyStatus>>,
+    mut spawn_enemy_count: ResMut<EnemySpawnCount>,
     window_query: Query<&Window, With<PrimaryWindow>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
@@ -51,12 +54,16 @@ pub fn spawn_enemies(
                     Enemy {},
                 ));
 
+                spawn_enemy_count.increment();
+
                 spawn_enemy_state_next_state.set(SpawnEnemyStatus::Cooldown(Instant::now()))
             }
             SpawnEnemyStatus::Cooldown(last_spawned) => {
-                if Instant::now().duration_since(last_spawned)
-                    > Duration::from_millis(ENEMY_SPAWN_COOLDOWN)
-                {
+                let cooldown = ENEMY_SPAWN_COOLDOWN_BASE
+                    - PER_LEVEL_SPAWN_COOLDOWN_DECREASE
+                        * (spawn_enemy_count.get_count() / WAVE_LENGTH);
+
+                if Instant::now().duration_since(last_spawned) > Duration::from_millis(cooldown) {
                     spawn_enemy_state_next_state.set(SpawnEnemyStatus::Ready)
                 }
             }

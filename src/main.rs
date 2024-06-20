@@ -6,7 +6,7 @@ mod gamestate;
 mod player;
 
 use camera::spawn_camera;
-use enemy::{enemy_hit, spawn_enemies, SpawnEnemyStatus};
+use enemy::{enemy_hit, spawn_enemies, EnemySpawnCount, SpawnEnemyStatus};
 use gamestate::lose_screen::{despawn_lose_screen, interact_with_shop_button, spawn_lose_screen};
 use gamestate::main_menu::{
     despawn_main_menu, interact_with_play_button, interact_with_quit_button, spawn_main_menu,
@@ -21,6 +21,7 @@ fn main() {
         .init_state::<ShootStatus>()
         .init_state::<SpawnEnemyStatus>()
         .init_state::<AppState>()
+        .init_resource::<EnemySpawnCount>()
         .add_systems(Startup, (spawn_camera, spawn_player))
         .add_systems(
             Update,
