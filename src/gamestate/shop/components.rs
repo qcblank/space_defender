@@ -28,15 +28,15 @@ pub enum Upgrade {
 #[derive(Component)]
 pub struct ShopItem {
     upgrade: Upgrade,
-    price: u32,
+    price: u64,
 }
 
 impl ShopItem {
-    pub fn with(upgrade: Upgrade, price: u32) -> Self {
+    pub fn with(upgrade: Upgrade, price: u64) -> Self {
         Self { upgrade, price }
     }
 
-    pub fn get_price(&self) -> u32 {
+    pub fn get_price(&self) -> u64 {
         self.price
     }
 }

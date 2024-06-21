@@ -7,7 +7,7 @@ use crate::player::Player;
 
 use bevy::prelude::*;
 
-const SHOT_COOLDOWN_PRICE: u32 = 2;
+const SHOT_COOLDOWN_PRICE: u64 = 2;
 
 pub fn spawn_shop_menu(
     mut commands: Commands,
@@ -27,7 +27,7 @@ pub fn despawn_shop_menu(mut commands: Commands, shop_menu_query: Query<Entity, 
 pub fn build_shop_menu(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
-    player_score: u32,
+    player_score: u64,
 ) -> Entity {
     let shop_menu_entity = commands
         .spawn((

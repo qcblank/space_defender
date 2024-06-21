@@ -4,7 +4,7 @@ const SHOT_COOLDOWN: u64 = 500;
 
 #[derive(Component)]
 pub struct Player {
-    score: u32,
+    score: u64,
     shot_cooldown: u64,
 }
 
@@ -18,15 +18,15 @@ impl Default for Player {
 }
 
 impl Player {
-    pub fn get_score(&self) -> u32 {
+    pub fn get_score(&self) -> u64 {
         self.score
     }
 
-    pub fn increment_score(&mut self) {
-        self.score += 1;
+    pub fn increment_score(&mut self, value: u64) {
+        self.score += value;
     }
 
-    pub fn decrement_score(&mut self, value: u32) {
+    pub fn decrement_score(&mut self, value: u64) {
         self.score -= value;
     }
 

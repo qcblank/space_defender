@@ -1,7 +1,8 @@
 use crate::gamestate::game_loop::components::ScoreText;
-use crate::player::Player;
 
 use bevy::prelude::*;
+
+use super::resources::RoundStats;
 
 pub fn spawn_game_loop_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     build_game_loop_ui(&mut commands, &asset_server);
@@ -21,7 +22,7 @@ fn build_game_loop_ui(commands: &mut Commands, asset_server: &Res<AssetServer>) 
         // Create a TextBundle that has a Text with a list of sections.
         TextBundle::from_sections([
             TextSection::new(
-                "Score: ",
+                "Round Score: ",
                 TextStyle {
                     // This font is loaded and will be used instead of the default font.
                     font: asset_server.load("fonts/FiraSans-Bold.ttf"),
@@ -51,10 +52,9 @@ fn build_game_loop_ui(commands: &mut Commands, asset_server: &Res<AssetServer>) 
 
 pub fn score_text_update_system(
     mut query: Query<&mut Text, With<ScoreText>>,
-    player_query: Query<&Player, With<Player>>,
+    round_stats: Res<RoundStats>,
 ) {
-    let player = player_query.get_single().unwrap();
     for mut text in &mut query {
-        text.sections[1].value = format!("{}", player.get_score());
+        text.sections[1].value = format!("{}", round_stats.get_score());
     }
 }
