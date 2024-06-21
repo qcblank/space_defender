@@ -7,6 +7,7 @@ mod player;
 
 use camera::spawn_camera;
 use enemy::{enemy_hit, spawn_enemies, EnemySpawnCount, SpawnEnemyStatus};
+use gamestate::game_loop::{despawn_game_loop_ui, score_text_update_system, spawn_game_loop_ui};
 use gamestate::lose_screen::{despawn_lose_screen, interact_with_shop_button, spawn_lose_screen};
 use gamestate::main_menu::{
     despawn_main_menu, interact_with_play_button, interact_with_quit_button, spawn_main_menu,
@@ -40,6 +41,7 @@ fn main() {
                 bullet_movement,
                 spawn_enemies,
                 enemy_hit,
+                score_text_update_system,
             )
                 .run_if(in_state(AppState::Game)),
         )
@@ -59,6 +61,8 @@ fn main() {
         .add_systems(Last, number_of_enemies_check)
         .add_systems(OnEnter(AppState::MainMenu), spawn_main_menu)
         .add_systems(OnExit(AppState::MainMenu), despawn_main_menu)
+        .add_systems(OnEnter(AppState::Game), spawn_game_loop_ui)
+        .add_systems(OnExit(AppState::Game), despawn_game_loop_ui)
         .add_systems(OnEnter(AppState::Lost), (spawn_lose_screen, clear_screen))
         .add_systems(OnExit(AppState::Lost), despawn_lose_screen)
         .add_systems(OnEnter(AppState::Shop), spawn_shop_menu)
