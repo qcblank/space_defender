@@ -1,4 +1,4 @@
-mod components;
+pub mod components;
 pub mod movement;
 pub mod player;
 pub mod shoot;

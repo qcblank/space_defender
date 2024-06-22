@@ -2,7 +2,7 @@ use super::components::{BuyButton, PlayerScore};
 use crate::gamestate::main_menu::styles::{
     HOVERED_BUTTON_COLOUR, NORMAL_BUTTON_COLOUR, PRESSED_BUTTON_COLOUR,
 };
-use crate::player::Player;
+use crate::Player;
 
 use bevy::prelude::*;
 

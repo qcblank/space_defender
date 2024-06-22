@@ -1,15 +1,17 @@
 use bevy::prelude::*;
 
 mod components;
+pub mod enemy;
 mod game_loop;
+pub mod player;
 mod resources;
 
-use crate::enemy::{enemy_hit, spawn_enemies};
-use crate::player::{bullet_movement, player_movement, shoot};
+use enemy::{enemy_hit, spawn_enemies};
 pub use game_loop::{
     clear_screen, despawn_game_loop_ui, number_of_enemies_check, score_text_update_system,
     spawn_game_loop_ui,
 };
+pub use player::{bullet_movement, player_movement, shoot, Bullet, Player};
 pub use resources::RoundStats;
 
 use super::AppState;

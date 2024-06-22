@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
-use crate::enemy::{Enemy, EnemySpawnCount};
+use super::enemy::{Enemy, EnemySpawnCount};
 use crate::gamestate::game_loop::components::ScoreText;
-use crate::player::Bullet;
 use crate::AppState;
 
 const MAX_ENEMIES: usize = 2;
 
+use super::player::Bullet;
 use super::resources::RoundStats;
 
 pub fn number_of_enemies_check(

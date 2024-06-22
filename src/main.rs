@@ -1,18 +1,16 @@
 use bevy::prelude::*;
 
 mod camera;
-mod enemy;
 mod gamestate;
-mod player;
 
 use camera::spawn_camera;
-use enemy::{EnemySpawnCount, SpawnEnemyStatus};
+use gamestate::game_loop::enemy::{EnemySpawnCount, SpawnEnemyStatus};
+use gamestate::game_loop::player::{spawn_player, Bullet, Player, ShootStatus};
 use gamestate::game_loop::{GameLoopPlugin, RoundStats};
 use gamestate::lose_screen::LoseScreenPlugin;
 use gamestate::main_menu::MainMenuPlugin;
 use gamestate::shop::ShopPlugin;
 use gamestate::AppState;
-use player::{spawn_player, ShootStatus};
 
 fn main() {
     App::new()

@@ -3,7 +3,7 @@ use super::styles::SHOP_MENU_STYLE;
 use crate::gamestate::main_menu::styles::*;
 use crate::gamestate::main_menu::{PlayButton, QuitButton};
 use crate::gamestate::shop::components::ShopMenu;
-use crate::player::Player;
+use crate::Player;
 
 use bevy::prelude::*;
 

@@ -1,5 +1,5 @@
 use super::{Enemy, ENEMY_SIZE};
-use crate::{gamestate::game_loop::RoundStats, player::Bullet};
+use crate::{gamestate::game_loop::RoundStats, Bullet};
 
 use bevy::prelude::*;
 

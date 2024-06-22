@@ -1,10 +1,9 @@
 use super::components::{LoseScreen, ShopButton};
 use crate::gamestate::game_loop::RoundStats;
 use crate::gamestate::main_menu::styles::*;
-use crate::player::Player;
+use crate::Player;
 
 use bevy::prelude::*;
-
 
 pub fn update_player_score(
     mut player_query: Query<&mut Player, With<Player>>,
