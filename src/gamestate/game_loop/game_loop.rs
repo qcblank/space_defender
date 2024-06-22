@@ -1,8 +1,41 @@
-use crate::gamestate::game_loop::components::ScoreText;
-
 use bevy::prelude::*;
 
+use crate::enemy::{Enemy, EnemySpawnCount};
+use crate::gamestate::game_loop::components::ScoreText;
+use crate::player::Bullet;
+use crate::AppState;
+
+const MAX_ENEMIES: usize = 2;
+
 use super::resources::RoundStats;
+
+pub fn number_of_enemies_check(
+    enemy_query: Query<(Entity, &Transform), With<Enemy>>,
+    app_state: Res<State<AppState>>,
+    mut app_state_next_state: ResMut<NextState<AppState>>,
+    mut spawn_enemy_count: ResMut<EnemySpawnCount>,
+) {
+    if **app_state == AppState::Game {
+        if enemy_query.iter().len() > MAX_ENEMIES {
+            dbg!("You lose!");
+            spawn_enemy_count.reset();
+            app_state_next_state.set(AppState::Lost)
+        }
+    }
+}
+
+pub fn clear_screen(
+    mut commands: Commands,
+    bullet_query: Query<Entity, With<Bullet>>,
+    enemy_query: Query<Entity, With<Enemy>>,
+) {
+    for bullet in bullet_query.iter() {
+        commands.entity(bullet).despawn_recursive();
+    }
+    for enemy in enemy_query.iter() {
+        commands.entity(enemy).despawn_recursive();
+    }
+}
 
 pub fn spawn_game_loop_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     build_game_loop_ui(&mut commands, &asset_server);

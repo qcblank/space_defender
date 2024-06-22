@@ -1,41 +1,10 @@
 use super::components::{LoseScreen, ShopButton};
-use crate::enemy::{Enemy, EnemySpawnCount};
 use crate::gamestate::game_loop::RoundStats;
 use crate::gamestate::main_menu::styles::*;
-use crate::player::{Bullet, Player};
-use crate::AppState;
+use crate::player::Player;
 
 use bevy::prelude::*;
 
-const MAX_ENEMIES: usize = 2;
-
-pub fn number_of_enemies_check(
-    enemy_query: Query<(Entity, &Transform), With<Enemy>>,
-    app_state: Res<State<AppState>>,
-    mut app_state_next_state: ResMut<NextState<AppState>>,
-    mut spawn_enemy_count: ResMut<EnemySpawnCount>,
-) {
-    if **app_state == AppState::Game {
-        if enemy_query.iter().len() > MAX_ENEMIES {
-            dbg!("You lose!");
-            spawn_enemy_count.reset();
-            app_state_next_state.set(AppState::Lost)
-        }
-    }
-}
-
-pub fn clear_screen(
-    mut commands: Commands,
-    bullet_query: Query<Entity, With<Bullet>>,
-    enemy_query: Query<Entity, With<Enemy>>,
-) {
-    for bullet in bullet_query.iter() {
-        commands.entity(bullet).despawn_recursive();
-    }
-    for enemy in enemy_query.iter() {
-        commands.entity(enemy).despawn_recursive();
-    }
-}
 
 pub fn update_player_score(
     mut player_query: Query<&mut Player, With<Player>>,

@@ -5,10 +5,7 @@ mod interactions;
 mod lose_screen;
 
 pub use interactions::interact_with_shop_button;
-pub use lose_screen::{
-    clear_screen, despawn_lose_screen, number_of_enemies_check, spawn_lose_screen,
-    update_player_score,
-};
+pub use lose_screen::{despawn_lose_screen, spawn_lose_screen, update_player_score};
 
 use super::AppState;
 
@@ -22,7 +19,7 @@ impl Plugin for LoseScreenPlugin {
         )
         .add_systems(
             OnEnter(AppState::Lost),
-            (spawn_lose_screen, clear_screen, update_player_score),
+            (spawn_lose_screen, update_player_score),
         )
         .add_systems(OnExit(AppState::Lost), despawn_lose_screen);
     }
