@@ -23,7 +23,8 @@ impl Plugin for ShopPlugin {
                     interact_with_buy_button,
                     interact_with_play_button,
                     interact_with_quit_button,
-                ),
+                )
+                    .run_if(in_state(AppState::Shop)),
             )
             // OnEnter State Systems
             .add_systems(OnEnter(AppState::Shop), spawn_shop_menu)
