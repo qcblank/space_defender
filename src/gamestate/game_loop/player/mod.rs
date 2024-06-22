@@ -7,5 +7,5 @@ pub mod shoot;
 pub use animation::animate_sprite;
 pub use components::{Bullet, Player};
 pub use movement::player_movement;
-pub use player::{spawn_player, PLAYER_SPEED, PLAYER_SPRITE_HEIGHT, PLAYER_SPRITE_WIDTH};
+pub use player::{spawn_player, PLAYER_SPEED, PLAYER_SPRITE_HEIGHT};
 pub use shoot::{bullet_movement, shoot, ShootStatus};
