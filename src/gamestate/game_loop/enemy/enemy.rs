@@ -36,8 +36,6 @@ pub fn spawn_enemies(
     if **app_state == AppState::Game {
         match **spawn_enemy_state {
             SpawnEnemyStatus::Ready => {
-                dbg!("boo!");
-
                 let random_x = ENEMY_SIZE / 2.0 + random::<f32>() * (window.width() - ENEMY_SIZE);
 
                 commands.spawn((

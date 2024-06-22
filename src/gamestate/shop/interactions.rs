@@ -21,7 +21,6 @@ pub fn interact_with_buy_button(
                 *background_colour = PRESSED_BUTTON_COLOUR.into();
                 let item_price = buy_button.get_item().get_price();
                 if player.get_score() >= item_price {
-                    dbg!(player.get_score() - item_price);
                     player.decrement_score(item_price);
                     player.decrease_shot_cooldown(25);
                 };

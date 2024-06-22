@@ -17,7 +17,6 @@ pub fn number_of_enemies_check(
 ) {
     if **app_state == AppState::Game {
         if enemy_query.iter().len() > MAX_ENEMIES {
-            dbg!("You lose!");
             spawn_enemy_count.reset();
             app_state_next_state.set(AppState::Lost)
         }

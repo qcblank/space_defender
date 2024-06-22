@@ -27,8 +27,6 @@ pub fn shoot(
     match **shoot_state {
         ShootStatus::Ready => {
             if keyboard_input.pressed(KeyCode::Space) {
-                dbg!("pew pew!");
-
                 commands.spawn((
                     MaterialMesh2dBundle {
                         mesh: meshes.add(Rectangle::new(5., 12.5)).into(),
