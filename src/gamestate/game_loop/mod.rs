@@ -11,7 +11,7 @@ pub use game_loop::{
     clear_screen, despawn_game_loop_ui, number_of_enemies_check, score_text_update_system,
     spawn_game_loop_ui,
 };
-pub use player::{bullet_movement, player_movement, shoot};
+pub use player::{animate_sprite, bullet_movement, player_movement, shoot};
 pub use resources::RoundStats;
 
 use super::AppState;
@@ -30,6 +30,7 @@ impl Plugin for GameLoopPlugin {
                 enemy_hit,
                 score_text_update_system,
                 number_of_enemies_check,
+                animate_sprite,
             )
                 .run_if(in_state(AppState::Game)),
         )

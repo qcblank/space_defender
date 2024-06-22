@@ -1,6 +1,6 @@
 use std::time::{Duration, Instant};
 
-use super::{Bullet, Player, PLAYER_HEIGHT, PLAYER_WIDTH};
+use super::{Bullet, Player, PLAYER_SPRITE_HEIGHT};
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
@@ -34,8 +34,8 @@ pub fn shoot(
                         mesh: meshes.add(Rectangle::new(5., 12.5)).into(),
                         material: materials.add(ColorMaterial::from(Color::CRIMSON)),
                         transform: Transform::from_translation(Vec3::new(
-                            player_transform.translation.x + PLAYER_WIDTH / 2.0,
-                            player_transform.translation.y + PLAYER_HEIGHT / 2.0,
+                            player_transform.translation.x,
+                            player_transform.translation.y + PLAYER_SPRITE_HEIGHT / 2.0,
                             0.,
                         )),
                         ..default()

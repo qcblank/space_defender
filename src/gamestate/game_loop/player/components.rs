@@ -53,3 +53,36 @@ impl Bullet {
         self.speed
     }
 }
+
+#[derive(Component)]
+pub struct AnimationIndices {
+    first: usize,
+    last: usize,
+}
+
+impl AnimationIndices {
+    pub fn new(first: usize, last: usize) -> Self {
+        Self { first, last }
+    }
+
+    pub fn next(&self, current_index: usize) -> usize {
+        if current_index == self.last {
+            self.first
+        } else {
+            current_index + 1
+        }
+    }
+
+    pub fn get_first(&self) -> usize {
+        self.first
+    }
+}
+
+#[derive(Component, Deref, DerefMut)]
+pub struct AnimationTimer(Timer);
+
+impl AnimationTimer {
+    pub fn new(timer: Timer) -> Self {
+        Self(timer)
+    }
+}
