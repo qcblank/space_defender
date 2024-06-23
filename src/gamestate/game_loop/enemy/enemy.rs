@@ -52,14 +52,13 @@ pub fn spawn_enemies(
                     Enemy {},
                 ));
 
-                spawn_enemy_count.increment();
+                spawn_enemy_count.amount += 1;
 
                 spawn_enemy_state_next_state.set(SpawnEnemyStatus::Cooldown(Instant::now()))
             }
             SpawnEnemyStatus::Cooldown(last_spawned) => {
                 let cooldown = ENEMY_SPAWN_COOLDOWN_BASE
-                    - PER_LEVEL_SPAWN_COOLDOWN_DECREASE
-                        * (spawn_enemy_count.get_count() / WAVE_LENGTH);
+                    - PER_LEVEL_SPAWN_COOLDOWN_DECREASE * (spawn_enemy_count.amount / WAVE_LENGTH);
 
                 if Instant::now().duration_since(last_spawned) > Duration::from_millis(cooldown) {
                     spawn_enemy_state_next_state.set(SpawnEnemyStatus::Ready)

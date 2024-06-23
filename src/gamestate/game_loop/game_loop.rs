@@ -17,7 +17,7 @@ pub fn number_of_enemies_check(
 ) {
     if **app_state == AppState::Game {
         if enemy_query.iter().len() > MAX_ENEMIES {
-            spawn_enemy_count.reset();
+            spawn_enemy_count.amount = 0;
             app_state_next_state.set(AppState::Lost)
         }
     }
@@ -87,6 +87,6 @@ pub fn score_text_update_system(
     round_stats: Res<RoundStats>,
 ) {
     for mut text in &mut query {
-        text.sections[1].value = format!("{}", round_stats.get_score());
+        text.sections[1].value = format!("{}", round_stats.score);
     }
 }

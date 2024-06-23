@@ -10,8 +10,8 @@ pub fn update_player_score(
     mut round_stats: ResMut<RoundStats>,
 ) {
     let mut player = player_query.get_single_mut().unwrap();
-    player.increment_score(round_stats.get_score());
-    round_stats.reset_score();
+    player.score += round_stats.score;
+    round_stats.score = 0;
 }
 
 pub fn spawn_lose_screen(
@@ -20,7 +20,7 @@ pub fn spawn_lose_screen(
     player_query: Query<&Player, With<Player>>,
 ) {
     let player = player_query.get_single().unwrap();
-    build_lose_screen(&mut commands, &asset_server, player.get_score());
+    build_lose_screen(&mut commands, &asset_server, player.score);
 }
 
 pub fn despawn_lose_screen(

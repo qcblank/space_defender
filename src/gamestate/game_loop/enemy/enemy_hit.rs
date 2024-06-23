@@ -20,7 +20,7 @@ pub fn enemy_hit(
                 commands.entity(bullet_entity).despawn_recursive();
                 commands.entity(enemy_entity).despawn_recursive();
                 bullet_destroyed = true;
-                round_stats.increment_score();
+                round_stats.score += 1;
                 break;
             }
         }

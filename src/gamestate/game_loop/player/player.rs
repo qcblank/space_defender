@@ -31,7 +31,7 @@ pub fn spawn_player(
                 texture,
                 atlas: TextureAtlas {
                     layout: texture_atlas_layout,
-                    index: animation_indices.get_first(),
+                    index: animation_indices.first,
                 },
                 transform: Transform::from_xyz(window.width() / 2., 60., 0.1),
                 ..default()

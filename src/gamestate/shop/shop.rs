@@ -15,7 +15,7 @@ pub fn spawn_shop_menu(
     player_query: Query<&Player, With<Player>>,
 ) {
     let player = player_query.get_single().unwrap();
-    build_shop_menu(&mut commands, &asset_server, player.get_score());
+    build_shop_menu(&mut commands, &asset_server, player.score);
 }
 
 pub fn despawn_shop_menu(mut commands: Commands, shop_menu_query: Query<Entity, With<ShopMenu>>) {

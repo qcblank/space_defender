@@ -20,15 +20,14 @@ pub fn interact_with_buy_button(
             Interaction::Pressed => {
                 *background_colour = PRESSED_BUTTON_COLOUR.into();
                 let item_price = buy_button.get_item().get_price();
-                if player.get_score() >= item_price {
-                    player.decrement_score(item_price);
-                    player.decrease_shot_cooldown(25);
+                if player.score >= item_price {
+                    player.score -= item_price;
+                    player.shot_cooldown -= 25;
                 };
 
                 let mut player_score_display = player_score_display_query.get_single_mut().unwrap();
 
-                player_score_display.sections[0].value =
-                    format!("Player score: {}", player.get_score());
+                player_score_display.sections[0].value = format!("Player score: {}", player.score);
             }
             Interaction::Hovered => {
                 *background_colour = HOVERED_BUTTON_COLOUR.into();

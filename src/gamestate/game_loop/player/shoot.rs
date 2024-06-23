@@ -45,7 +45,7 @@ pub fn shoot(
         }
         ShootStatus::Fired(time_fired) => {
             if Instant::now().duration_since(time_fired)
-                > Duration::from_millis(player.get_shot_cooldown())
+                > Duration::from_millis(player.shot_cooldown)
             {
                 shoot_state_next_state.set(ShootStatus::Ready)
             }
@@ -61,7 +61,7 @@ pub fn bullet_movement(
 ) {
     let window = window_query.get_single().unwrap();
     for (entity, mut transform, bullet) in bullet_query.iter_mut() {
-        transform.translation += Vec3::Y * bullet.get_speed() * time.delta_seconds();
+        transform.translation += Vec3::Y * bullet.speed * time.delta_seconds();
         if transform.translation.y > window.height() {
             commands.entity(entity).despawn_recursive();
         }
