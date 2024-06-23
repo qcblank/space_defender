@@ -19,12 +19,8 @@ pub fn explode(
     for (explosion_entity, indices, mut timer, mut atlas) in &mut query {
         timer.tick(time.delta());
         if timer.just_finished() {
-            dbg!("first");
-            dbg!(atlas.index);
             atlas.index = indices.next(atlas.index);
-            dbg!(atlas.index);
             if atlas.index == indices.first {
-                dbg!("deleting!");
                 commands.entity(explosion_entity).despawn_recursive();
             }
         }
