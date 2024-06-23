@@ -38,7 +38,7 @@ pub fn shoot(
                         )),
                         ..default()
                     },
-                    Bullet::with_speed(BULLET_SPEED),
+                    Bullet::new(BULLET_SPEED),
                 ));
                 shoot_state_next_state.set(ShootStatus::Fired(Instant::now()))
             }

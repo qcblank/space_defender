@@ -23,7 +23,7 @@ pub struct Bullet {
 }
 
 impl Bullet {
-    pub fn with_speed(speed: f32) -> Self {
+    pub fn new(speed: f32) -> Self {
         Bullet { speed }
     }
 }
